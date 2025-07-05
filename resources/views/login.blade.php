@@ -16,8 +16,8 @@
 <body>
     <div class="container d-flex justify-content-center align-items-center login-container">
         <div class="card p-4 shadow-lg" style="min-width: 350px; border-radius: 16px;">
+            <img src="{{ asset('image/loginconnet.png') }}" alt="Gambar Iconnet" class="img-fluid rounded mx-auto d-block mb-4" style="max-width: 200px; ">
             <h4 class="text-center mb-4">Login</h4>
-
             {{-- ✅ Pesan sukses logout --}}
             @if (session('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
