@@ -84,7 +84,7 @@ class DiagnosaHasilController extends Controller
                 'persentase' => $persentase
             ];
         }
-        // Urutkan berdasarkan persentase tertinggi
+       
         $hasil = collect($hasil)->sortByDesc('persentase')->values()->toArray();
         $kerusakanKuat = collect($hasil)->where('persentase', '>=', 100)->isNotEmpty();
         return view('diagnosahasil', compact('dataPelanggan', 'gangguan', 'hasil', 'kerusakanKuat'));

@@ -27,7 +27,7 @@ Route::get('diagnosahasil', [DiagnosaHasilController::class, 'hasil'])->name('di
 });
 
 Route::middleware(['auth', 'level:superadmin'])->group(function () {
-    Route::get('datauser', [UserController::class, 'index'])->name('user.index');
+Route::get('datauser', [UserController::class, 'index'])->name('user.index');
 Route::post('datauser', [UserController::class, 'store'])->name('user.store');
 Route::post('datauser/update/{id}', [UserController::class, 'update'])->name('user.update');
 Route::delete('datauser/delete/{id}', [UserController::class, 'destroy'])->name('user.destroy');
