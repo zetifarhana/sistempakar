@@ -70,7 +70,6 @@
               <div class="modal-content">
                 <form action="{{ route('user.update', ['id' => $user->id]) }}" method="POST">
                   @csrf
-                  @method('POST') <!-- Gunakan PUT jika rutenya mendukung -->
                   <div class="modal-header">
                     <h5 class="modal-title" id="editUserModalLabel{{ $user->id }}">Edit User</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
@@ -78,7 +77,8 @@
                   <div class="modal-body">
                     <div class="mb-3">
                       <label for="username" class="form-label">Username</label>
-                      <input type="text" name="username" class="form-control" value="{{ $user->username }}" required>
+                      <input type="text" class="form-control" value="{{ $user->username }}" readonly>
+                      <!-- Tidak gunakan name="username" agar tidak terkirim ke controller -->
                     </div>
                     <div class="mb-3">
                       <label for="password" class="form-label">Password (biarkan kosong jika tidak diubah)</label>

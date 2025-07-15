@@ -1,5 +1,5 @@
 @extends('layout.index')
-<link href="css/styles.css" rel="stylesheet" />
+<link href="{{ asset('css/styles.css') }}" rel="stylesheet" />
 
 @section('content')
 <form id="diagnosa" class="form">
@@ -24,7 +24,7 @@
                     </tr>
                     <tr>
                         <td><strong>Tanggal Diagnosa</strong></td>
-                        <td>{{ date('d/m/Y H:i:s') }}</td>
+                        <td>{{ now()->format('d/m/Y H:i:s') }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -43,7 +43,7 @@
                     <tr>
                         <td><strong>Gangguan yang Dipilih</strong></td>
                         <td>
-                            @if($gangguan && $gangguan->count() > 0)
+                            @if($gangguan && $gangguan->count())
                                 <ul class="mb-0">
                                     @foreach ($gangguan as $g)
                                         <li><strong>{{ $g->kode_gangguan }}</strong> - {{ $g->nama_gangguan }}</li>
@@ -62,90 +62,89 @@
                                     Kami menemukan <strong>1 penyebab kuat</strong> dan <strong>{{ count($hasil) - 1 }} potensi penyebab lainnya</strong>.
                                 @else
                                     <span class="badge bg-warning">Potensi Kerusakan</span><br>
-                                    Kami tidak menemukan penyebab kuat, tapi ada <strong>{{ count($hasil) }} potensi penyebab</strong>.
+                                    Tidak ditemukan penyebab kuat, tapi ada <strong>{{ count($hasil) }} potensi penyebab</strong>.
                                 @endif
                             @else
                                 <span class="badge bg-danger">Tidak Ditemukan</span><br>
-                                Tidak ditemukan potensi penyebab. Silakan coba diagnosa ulang dengan memilih gangguan lain.
+                                Tidak ditemukan potensi penyebab.
                             @endif
                         </td>
                     </tr>
                 </tbody>
             </table>
 
-            {{-- Detail Hasil untuk setiap penyebab --}}
-            @if(!empty($hasil))
-                @foreach ($hasil as $index => $aturan)
-                    <div class="card mb-3 {{ $loop->first && $kerusakanKuat ? 'border-success' : '' }}">
-                        <div class="card-header {{ $loop->first && $kerusakanKuat ? 'bg-primary text-white' : 'bg-light' }}">
-                            <h5 class="mb-0">
-                                {{ $loop->first && $kerusakanKuat ? '🎯 ' : '🎯 ' }}
-                                Hasil {{ $loop->iteration }}
-                                @if ($loop->first && $kerusakanKuat)
-                                @endif
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <table class="table table-bordered">
-                                <tbody>
-                                    <tr>
-                                        <td width="25%"><strong>Kode Kerusakan</strong><br></td>
-                                        <td>
-                                            @if($aturan['penyebab'])
-                                                <strong>{{ $aturan['penyebab']->kode_penyebab }} - {{ $aturan['penyebab']->nama_penyebab }}</strong><br>
-                                            @else
-                                                <strong>{{ $aturan['kode_penyebab'] }} - Data Penyebab Tidak Tersedia</strong><br>
-                                            @endif
-                                            <small>
-                                               
-                                            </small>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Gangguan Terkait</strong></td>
-                                        <td>
-                                            @if($aturan['gangguan'] && $aturan['gangguan']->count() > 0)
-                                                <ol class="mb-0">
-                                                    @foreach ($aturan['gangguan'] as $g)
-                                                        <li><strong>{{ $g->kode_gangguan }}</strong> - {{ $g->nama_gangguan }}</li>
-                                                    @endforeach
-                                                </ol>
-                                            @else
-                                                <p class="text-muted mb-0">Tidak ada data gangguan terkait</p>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Solusi Perbaikan</strong></td>
-                                        <td>
-                                            @if(!empty($aturan['solusis']) && count($aturan['solusis']) > 0)
-                                                <ol class="mb-0">
-                                                    @foreach ($aturan['solusis'] as $solusi)
-                                                        <li>
-                                                            @if(isset($solusi['kode_solusi']))
-                                                            @endif
-                                                            {{ $solusi['deskripsi_solusi'] }}
-                                                        </li>
-                                                    @endforeach
-                                                </ol>
-                                            @else
-                                                <div class="alert alert-warning mb-0">
-                                                    <i class="fas fa-exclamation-triangle"></i>
-                                                    Belum ada solusi spesifik yang tersedia untuk penyebab ini. 
-                                                    Silakan konsultasi dengan teknisi ahli.
-                                                </div>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                @endforeach
-            @endif
+            {{-- Detail Hasil --}}
+            @foreach ($hasil as $index => $aturan)
+            <div class="card mb-3 {{ $loop->first ? 'border-success' : 'border-secondary' }}">
+                <div class="card-header {{ $loop->first ? 'bg-success text-white' : 'bg-light' }}">
+                    <h5 class="mb-0">
+                        {{ $loop->first ? '✅ Solusi Terbaik - Hasil ' : '📌 Hasil ' }}{{ $loop->iteration }}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered mb-3">
+                        <tbody>
+                            <tr>
+                                <td width="25%"><strong>Kode Kerusakan</strong></td>
+                                <td>
+                                    @if($aturan['penyebab'])
+                                        <strong>{{ $aturan['penyebab']->kode_penyebab }} - {{ $aturan['penyebab']->nama_penyebab }}</strong>
+                                    @else
+                                        <em>Data penyebab tidak ditemukan</em>
+                                    @endif
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Gangguan Terkait</strong></td>
+                                <td>
+                                    @if($aturan['gangguan'] && $aturan['gangguan']->count())
+                                        <ol class="mb-0">
+                                            @foreach ($aturan['gangguan'] as $g)
+                                                <li><strong>{{ $g->kode_gangguan }}</strong> - {{ $g->nama_gangguan }}</li>
+                                            @endforeach
+                                        </ol>
+                                    @else
+                                        <p class="text-muted mb-0">Tidak ada data gangguan terkait</p>
+                                    @endif
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Solusi Perbaikan</strong></td>
+                                <td>
+                                    @if (!empty($aturan['solusis']))
+                                        <ol class="mb-0">
+                                            @foreach ($aturan['solusis'] as $solusi)
+                                                <li>{{ $solusi['deskripsi_solusi'] }}</li>
+                                            @endforeach
+                                        </ol>
+                                    @else
+                                        <div class="alert alert-warning mb-0">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                            Belum ada solusi spesifik. Konsultasikan ke teknisi.
+                                        </div>
+                                    @endif
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Persentase Kecocokan</strong></td>
+                                <td>
+                                    <div class="progress">
+                                        <div class="progress-bar {{ $aturan['persentase'] == 100 ? 'bg-success' : 'bg-info' }}"
+                                             role="progressbar"
+                                             style="width: {{ $aturan['persentase'] }}%;">
+                                            {{ $aturan['persentase'] }}%
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            @endforeach
         </div>
 
-        {{-- Action Buttons --}}
+        {{-- Action --}}
         <div class="d-flex justify-content-center gap-3 mt-4">
             <a href="{{ route('diagnosa.index') }}" class="btn btn-primary btn-lg">
                 <i class="fas fa-redo"></i> Diagnosa Lagi
@@ -188,5 +187,4 @@
         {{ session('error') }}
     </div>
 @endif
-
 @endsection

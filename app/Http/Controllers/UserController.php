@@ -31,23 +31,22 @@ class UserController extends Controller
         ]);
 
         return redirect()->route('user.index')->with('success', 'User berhasil ditambahkan.');
-
     }
+
     // Mengupdate data user
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
 
         $request->validate([
-            'username' => 'required|string|max:50|unique:tbl_user,username,' . $id,
+            // Username tidak perlu divalidasi karena tidak boleh diubah
             'level' => 'required|in:superadmin,admin',
             'password' => 'nullable|string|min:6'
         ]);
 
-        $user->username = $request->username;
+        // Username tidak diubah
         $user->level = $request->level;
 
-        // Jika password diisi, update
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
         }
@@ -63,8 +62,6 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $user->delete();
 
-        return redirect()->route('user.index', $user->id)->with('success', 'User berhasil dihapus.');
+        return redirect()->route('user.index')->with('success', 'User berhasil dihapus.');
     }
-
-    }
-
+}
