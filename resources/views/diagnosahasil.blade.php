@@ -5,7 +5,7 @@
 <form id="diagnosa" class="form">
     <div class="step">
         {{-- Data Pelanggan --}}
-        @if(isset($dataPelanggan) && $dataPelanggan)
+        @if(isset($dataPelanggan))
         <div class="table-responsive mt-4">
             <table class="table table-bordered table-striped">
                 <thead>
@@ -130,8 +130,8 @@
                                 <td>
                                     <div class="progress">
                                         <div class="progress-bar {{ $aturan['persentase'] == 100 ? 'bg-success' : 'bg-info' }}"
-                                             role="progressbar"
-                                             style="width: {{ $aturan['persentase'] }}%;">
+                                            role="progressbar"
+                                            style="width: {{ $aturan['persentase'] }}%;">
                                             {{ $aturan['persentase'] }}%
                                         </div>
                                     </div>
@@ -144,7 +144,7 @@
             @endforeach
         </div>
 
-        {{-- Action --}}
+        {{-- Tombol Aksi --}}
         <div class="d-flex justify-content-center gap-3 mt-4">
             <a href="{{ route('diagnosa.index') }}" class="btn btn-primary btn-lg">
                 <i class="fas fa-redo"></i> Diagnosa Lagi
