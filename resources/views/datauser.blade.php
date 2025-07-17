@@ -17,7 +17,6 @@
                 <th>No</th>
                 <th>Username</th>
                 <th>Level</th>
-                <th>Password</th>
                 <th>Aksi</th>
             </tr>
         </thead>
@@ -27,7 +26,6 @@
             <td>{{ $index + 1 }}</td>
             <td>{{ $user->username }}</td>
             <td>{{ $user->level }}</td>
-            <td><i class="fa fa-lock"></i></td>
             <td>
                 <!-- Tombol Edit -->
                 <button class="btn btn-info btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editUserModal{{ $user->id }}">
